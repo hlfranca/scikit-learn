@@ -26,6 +26,7 @@ The module structure is the following:
 from abc import ABCMeta, abstractmethod
 
 import numpy as np
+import pickle
 from numpy.core.umath_tests import inner1d
 
 from .base import BaseEnsemble
@@ -136,7 +137,10 @@ class BaseWeightBoosting(six.with_metaclass(ABCMeta, BaseEnsemble)):
 
         random_state = check_random_state(self.random_state)
 
+        sample_weight_record = np.empty([self.n_estimators, X.shape[0]])
+
         for iboost in range(self.n_estimators):
+            sample_weight_record[iboost] = sample_weight
             # Boosting step
             sample_weight, estimator_weight, estimator_error = self._boost(
                 iboost,
@@ -164,6 +168,9 @@ class BaseWeightBoosting(six.with_metaclass(ABCMeta, BaseEnsemble)):
             if iboost < self.n_estimators - 1:
                 # Normalize
                 sample_weight /= sample_weight_sum
+
+        with open('sample_weight_record.pkl', mode='wb') as outgoing:
+            pickle.dump(sample_weight_record, outgoing, pickle.HIGHEST_PROTOCOL)
 
         return self
 
