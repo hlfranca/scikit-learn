@@ -137,10 +137,10 @@ class BaseWeightBoosting(six.with_metaclass(ABCMeta, BaseEnsemble)):
 
         random_state = check_random_state(self.random_state)
 
-        sample_weight_record = np.empty([self.n_estimators, X.shape[0]])
+        sample_weight_record = np.empty(X.shape[0], dtype=np.float64)
 
         for iboost in range(self.n_estimators):
-            sample_weight_record[iboost] = sample_weight
+            sample_weight_record = sample_weight
             # Boosting step
             sample_weight, estimator_weight, estimator_error = self._boost(
                 iboost,
