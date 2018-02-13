@@ -136,10 +136,7 @@ class BaseWeightBoosting(six.with_metaclass(ABCMeta, BaseEnsemble)):
 
         random_state = check_random_state(self.random_state)
 
-        sample_weight_record = np.empty(X.shape[0], dtype=np.float64)
-
         for iboost in range(self.n_estimators):
-            sample_weight_record = sample_weight
             # Boosting step
             sample_weight, estimator_weight, estimator_error = self._boost(
                 iboost,
@@ -169,7 +166,7 @@ class BaseWeightBoosting(six.with_metaclass(ABCMeta, BaseEnsemble)):
                 sample_weight /= sample_weight_sum
 
         with open('sample_weight_record.pkl', mode='wb') as outgoing:
-            pickle.dump(sample_weight_record, outgoing, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(sample_weight, outgoing, pickle.HIGHEST_PROTOCOL)
 
         return self
 
